@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.invoicecsv"},{"l":"com.example.invoicecsv.exception"},{"l":"com.example.invoicecsv.model"},{"l":"com.example.invoicecsv.parser"},{"l":"com.example.invoicecsv.service"}];updateSearchResults();
