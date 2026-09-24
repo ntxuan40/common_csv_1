@@ -2,7 +2,7 @@
 
 ## Maven dependency
 
-The current artifact is `com.example:common-csv:0.1.0-SNAPSHOT`. Install it locally first:
+The current artifact is `com.example:common-csv:1.0.0`. Install it locally first:
 
 ```bash
 mvn clean install
@@ -14,7 +14,7 @@ Then add it to the consuming Maven project's `pom.xml`:
 <dependency>
     <groupId>com.example</groupId>
     <artifactId>common-csv</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 

@@ -230,7 +230,7 @@ Then add this dependency to the consuming project's `pom.xml`:
 <dependency>
 	<groupId>com.example</groupId>
 	<artifactId>common-csv</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 
@@ -257,7 +257,7 @@ mvn clean install
 The generated artifact is written under `target/` as:
 
 ```text
-target/common-csv-0.1.0-SNAPSHOT.jar
+target/common-csv-1.0.0.jar
 ```
 
 ## Project Structure
@@ -284,7 +284,7 @@ common_csv_1/
 ## Version Information
 
 - Artifact: `com.example:common-csv`
-- Current version: `0.1.0-SNAPSHOT`
+- Current version: `1.0.0`
 - Packaging: `jar`
 - Java release: `22`
 - Test framework: JUnit Jupiter `5.10.2`
