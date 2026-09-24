@@ -1,10 +1,14 @@
 package com.example.invoicecsv.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -221,4 +225,100 @@ class CsvRowParserTest {
             return closed;
         }
     }
+    
+    @Test
+    void testEqualsAndHashCodeAndToString() {
+        // 1. Khởi tạo các đối tượng để test
+        InvoiceCsvRow row1 = new InvoiceCsvRow("1", "Item A", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        InvoiceCsvRow row2 = new InvoiceCsvRow("1", "Item A", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        InvoiceCsvRow row3 = new InvoiceCsvRow("2", "Item B", BigDecimal.ONE, BigDecimal.valueOf(200), BigDecimal.valueOf(0.1));
+
+        // 2. Test hàm equals() để phủ hết các nhánh màu đỏ
+        assertTrue(row1.equals(row1));          // Phủ nhánh: this == obj
+        assertFalse(row1.equals(null));         // Phủ nhánh: obj == null
+        assertFalse(row1.equals("NotARow"));    // Phủ nhánh: khác kiểu dữ liệu
+        assertTrue(row1.equals(row2));          // Phủ nhánh: các thuộc tính giống nhau
+        assertFalse(row1.equals(row3));         // Phủ nhánh: các thuộc tính khác nhau
+
+        // 3. Test hàm hashCode()
+        assertEquals(row1.hashCode(), row2.hashCode());
+        assertNotEquals(row1.hashCode(), row3.hashCode());
+
+        // 4. Test hàm toString()
+        assertNotNull(row1.toString());
+        assertTrue(row1.toString().contains("Item A")); // Kiểm tra xem có chứa tên item không
+    }
+    
+    @Test
+    void testInvoiceCsvRowRequireNonBlankThrowsException() {
+        // Phủ dòng 99-100: Test trường hợp truyền chuỗi trống/null vào constructor để kích hoạt Exception
+        assertThrows(IllegalArgumentException.class, () -> {
+            new InvoiceCsvRow("", "Item A", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        });
+        
+        assertThrows(IllegalArgumentException.class, () -> {
+            new InvoiceCsvRow("1", "   ", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        });
+    }
+
+    @Test
+    void testInvoiceCsvRowEqualsFullBranches() {
+        InvoiceCsvRow base = new InvoiceCsvRow("1", "Item A", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        
+        // Phủ các nhánh màu vàng ở hàm equals (dòng 117-121) bằng cách cho lệch từng thuộc tính một
+        InvoiceCsvRow diffStt = new InvoiceCsvRow("2", "Item A", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        InvoiceCsvRow diffItem = new InvoiceCsvRow("1", "Item B", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        InvoiceCsvRow diffQty = new InvoiceCsvRow("1", "Item A", BigDecimal.ONE, BigDecimal.valueOf(100), BigDecimal.valueOf(0.1));
+        InvoiceCsvRow diffPrice = new InvoiceCsvRow("1", "Item A", BigDecimal.TEN, BigDecimal.valueOf(200), BigDecimal.valueOf(0.1));
+        InvoiceCsvRow diffVat = new InvoiceCsvRow("1", "Item A", BigDecimal.TEN, BigDecimal.valueOf(100), BigDecimal.valueOf(0.2));
+
+        assertFalse(base.equals(diffStt));
+        assertFalse(base.equals(diffItem));
+        assertFalse(base.equals(diffQty));
+        assertFalse(base.equals(diffPrice));
+        assertFalse(base.equals(diffVat));
+    }
+    
+    @Test
+    void testParseWithOptionsNullThrowsException() {
+        // 1. Phủ dòng 48-49: Truyền options là null để kích hoạt Exception
+        java.io.StringReader reader = new java.io.StringReader("stt,item\n1,Item A");
+        assertThrows(CsvValidationException.class, () -> {
+            new CsvRowParser().parse(reader, null);
+        });
+    }
+
+    @Test
+    void testParseWithEmptyLinesReturnsEmptyList() {
+        // 2. Phủ dòng 55-57: Truyền chuỗi trống hoặc chỉ có dòng trống để lines.isEmpty() đúng
+        java.io.StringReader reader = new java.io.StringReader("");
+        CsvParseOptions options = CsvParseOptions.defaults();
+
+        List<InvoiceCsvRow> result = new CsvRowParser().parse(reader, options);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testParseWithIOExceptionThrowsFormatException() throws java.io.IOException {
+        // 3. Phủ dòng 64-65: Giả lập một Reader bị lỗi khi đọc để kích hoạt IOException
+        java.io.Reader brokenReader = new java.io.Reader() {
+            @Override
+            public int read(char[] cbuf, int off, int len) throws java.io.IOException {
+                throw new java.io.IOException("Giả lập lỗi phần cứng/đọc file");
+            }
+            @Override
+            public void close() throws java.io.IOException {}
+        };
+        
+        CsvParseOptions options = CsvParseOptions.defaults();
+
+        assertThrows(CsvFormatException.class, () -> {
+            new CsvRowParser().parse(brokenReader, options);
+        });
+    }
+    
+    
+    
+    
 }

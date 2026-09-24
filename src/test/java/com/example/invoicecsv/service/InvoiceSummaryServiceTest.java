@@ -1,6 +1,10 @@
 package com.example.invoicecsv.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -48,6 +52,8 @@ class InvoiceSummaryServiceTest {
         assertMoneyEquals(new BigDecimal("30.00"), result.getSummary().getSumVatAmount());
         assertMoneyEquals(new BigDecimal("230.00"), result.getSummary().getTotal());
     }
+    
+    
 
     @Test
         void givenZeroValueItems_whenSummarized_thenAllTotalsAreZero() {
@@ -112,5 +118,32 @@ class InvoiceSummaryServiceTest {
     private void assertMoneyEquals(BigDecimal expected, BigDecimal actual) {
         assertEquals(0, actual.compareTo(expected),
                 () -> "Expected value " + expected.toPlainString() + " but was " + actual.toPlainString());
+    }
+    
+    @Test
+    void testInvoiceSummaryMethods() {
+        // 1. Khởi tạo các đối tượng test (Dựa theo hàm factory 'of' của bạn)
+        BigDecimal sumAmt = new BigDecimal("1000");
+        BigDecimal vatAmt = new BigDecimal("100");
+        BigDecimal total = new BigDecimal("1100");
+
+        InvoiceSummary summary1 = InvoiceSummary.of(sumAmt, vatAmt, total);
+        InvoiceSummary summary2 = InvoiceSummary.of(sumAmt, vatAmt, total);
+        InvoiceSummary summary3 = InvoiceSummary.of(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+
+        // 2. Phủ code cho hàm equals()
+        assertTrue(summary1.equals(summary1));          // Phủ nhánh: this == obj
+        assertFalse(summary1.equals(null));         // Phủ nhánh: obj == null
+        assertFalse(summary1.equals("KhacKieuDuLieu")); // Phủ nhánh: !(obj instanceof InvoiceSummary)
+        assertTrue(summary1.equals(summary2));          // Phủ nhánh: các thuộc tính giống nhau
+        assertFalse(summary1.equals(summary3));         // Phủ nhánh: các thuộc tính khác nhau
+
+        // 3. Phủ code cho hàm hashCode()
+        assertEquals(summary1.hashCode(), summary2.hashCode());
+        assertNotEquals(summary1.hashCode(), summary3.hashCode());
+
+        // 4. Phủ code cho hàm toString()
+        assertNotNull(summary1.toString());
+        assertTrue(summary1.toString().contains("sumAmount="));
     }
 }

@@ -74,6 +74,8 @@ class InvoiceCsvLibraryIntegrationTest {
             assertMoneyEquals(new java.math.BigDecimal("4400.00"), result.getSummary().getTotal());
         }
     }
+    
+    
 
     @Test
     void givenInvalidNumericInput_whenProcessed_thenValidationExceptionIsPropagated() {
