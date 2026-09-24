@@ -64,6 +64,10 @@ class InvoiceCsvLibraryIntegrationTest {
                 getClass().getResourceAsStream("/invoice-with-header.csv"), StandardCharsets.UTF_8))) {
             InvoiceCsvResult result = library.process(reader, true);
 
+            System.out.println("CSV file processing result:");
+            result.getItems().forEach(item -> System.out.println("  " + item));
+            System.out.println("  Summary: " + result.getSummary());
+
             assertEquals(2, result.getItems().size());
             assertNull(result.getItems().get(0).getOriginalAmount());
             assertNull(result.getItems().get(0).getOriginalVatAmount());
