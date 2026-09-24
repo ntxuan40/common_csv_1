@@ -29,8 +29,8 @@ public final class InvoiceItem {
      * @param quantity the quantity value from the CSV row
      * @param unitPrice the unit price from the CSV row
      * @param vatRate the VAT rate from the CSV row
-     * @param originalAmount the original amount value from the CSV row
-     * @param originalVatAmount the original VAT amount value from the CSV row
+    * @param originalAmount the original amount value from the CSV row, or {@code null} when blank
+    * @param originalVatAmount the original VAT amount value from the CSV row, or {@code null} when blank
      * @param calculatedAmount the calculated amount for this row
      * @param calculatedVatAmount the calculated VAT amount for this row
      */
@@ -46,8 +46,8 @@ public final class InvoiceItem {
      * @param quantity the quantity value from the CSV row
      * @param unitPrice the unit price from the CSV row
      * @param vatRate the VAT rate from the CSV row
-     * @param originalAmount the original amount value from the CSV row
-     * @param originalVatAmount the original VAT amount value from the CSV row
+    * @param originalAmount the original amount value from the CSV row, or {@code null} when blank
+    * @param originalVatAmount the original VAT amount value from the CSV row, or {@code null} when blank
      * @param calculatedAmount the calculated amount for this row
      * @param calculatedVatAmount the calculated VAT amount for this row
      */
@@ -66,8 +66,8 @@ public final class InvoiceItem {
         this.quantity = requireNotNull(quantity, "quantity");
         this.unitPrice = requireNotNull(unitPrice, "unitPrice");
         this.vatRate = requireNotNull(vatRate, "vatRate");
-        this.originalAmount = requireNotNull(originalAmount, "originalAmount");
-        this.originalVatAmount = requireNotNull(originalVatAmount, "originalVatAmount");
+        this.originalAmount = originalAmount;
+        this.originalVatAmount = originalVatAmount;
         this.calculatedAmount = requireNotNull(calculatedAmount, "calculatedAmount");
         this.calculatedVatAmount = requireNotNull(calculatedVatAmount, "calculatedVatAmount");
     }
@@ -120,7 +120,7 @@ public final class InvoiceItem {
     /**
      * Returns the original amount value from the CSV row.
      *
-     * @return the original amount
+    * @return the original amount, or {@code null} when the source field was blank
      */
     public BigDecimal getOriginalAmount() {
         return originalAmount;
@@ -129,7 +129,7 @@ public final class InvoiceItem {
     /**
      * Returns the original VAT amount value from the CSV row.
      *
-     * @return the original VAT amount
+    * @return the original VAT amount, or {@code null} when the source field was blank
      */
     public BigDecimal getOriginalVatAmount() {
         return originalVatAmount;

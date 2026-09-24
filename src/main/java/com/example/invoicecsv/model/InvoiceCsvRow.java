@@ -26,8 +26,8 @@ public final class InvoiceCsvRow {
      * @param quantity the parsed quantity
      * @param unitPrice the parsed unit price
      * @param vatRate the parsed VAT rate
-     * @param originalAmount the original amount from the CSV row
-     * @param originalVatAmount the original VAT amount from the CSV row
+    * @param originalAmount the original amount from the CSV row, or {@code null} when blank
+    * @param originalVatAmount the original VAT amount from the CSV row, or {@code null} when blank
      */
     /**
      * Creates a parsed CSV row.
@@ -41,8 +41,8 @@ public final class InvoiceCsvRow {
      * @param quantity the parsed quantity
      * @param unitPrice the parsed unit price
      * @param vatRate the parsed VAT rate
-     * @param originalAmount the original amount from the CSV row
-     * @param originalVatAmount the original VAT amount from the CSV row
+    * @param originalAmount the original amount from the CSV row, or {@code null} when blank
+    * @param originalVatAmount the original VAT amount from the CSV row, or {@code null} when blank
      */
     public InvoiceCsvRow(
             String stt,
@@ -57,8 +57,8 @@ public final class InvoiceCsvRow {
         this.quantity = requireNotNull(quantity, "quantity");
         this.unitPrice = requireNotNull(unitPrice, "unitPrice");
         this.vatRate = requireNotNull(vatRate, "vatRate");
-        this.originalAmount = requireNotNull(originalAmount, "originalAmount");
-        this.originalVatAmount = requireNotNull(originalVatAmount, "originalVatAmount");
+        this.originalAmount = originalAmount;
+        this.originalVatAmount = originalVatAmount;
     }
 
     /**
@@ -109,7 +109,7 @@ public final class InvoiceCsvRow {
     /**
      * Returns the original amount from the CSV row.
      *
-     * @return original amount
+    * @return original amount, or {@code null} when the source field was blank
      */
     public BigDecimal getOriginalAmount() {
         return originalAmount;
@@ -118,7 +118,7 @@ public final class InvoiceCsvRow {
     /**
      * Returns the original VAT amount from the CSV row.
      *
-     * @return original VAT amount
+    * @return original VAT amount, or {@code null} when the source field was blank
      */
     public BigDecimal getOriginalVatAmount() {
         return originalVatAmount;

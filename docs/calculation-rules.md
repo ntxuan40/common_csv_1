@@ -9,7 +9,7 @@ calculatedAmount = quantity * unitPrice
 calculatedVatAmount = calculatedAmount * normalizedVatRate
 ```
 
-The original `Thành tiền` and `VAT Amt` values are retained separately. The library does not compare those source values with the calculated values or overwrite them.
+The original `Thành tiền` and `VAT Amt` values are retained separately. Either source field may be blank; in that case the corresponding original model value is `null`. The library does not compare source values with calculated values or overwrite them.
 
 ## VAT normalization
 

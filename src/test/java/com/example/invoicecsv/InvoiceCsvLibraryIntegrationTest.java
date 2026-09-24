@@ -1,8 +1,13 @@
 package com.example.invoicecsv;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -51,6 +56,23 @@ class InvoiceCsvLibraryIntegrationTest {
         assertMoneyEquals(new java.math.BigDecimal("4000.00"), result.getSummary().getSumAmount());
         assertMoneyEquals(new java.math.BigDecimal("400.00"), result.getSummary().getSumVatAmount());
         assertMoneyEquals(new java.math.BigDecimal("4400.00"), result.getSummary().getTotal());
+    }
+
+    @Test
+    void givenCsvFile_whenProcessed_thenCompleteResultIsCalculatedExactly() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                getClass().getResourceAsStream("/invoice-with-header.csv"), StandardCharsets.UTF_8))) {
+            InvoiceCsvResult result = library.process(reader, true);
+
+            assertEquals(2, result.getItems().size());
+            assertNull(result.getItems().get(0).getOriginalAmount());
+            assertNull(result.getItems().get(0).getOriginalVatAmount());
+            assertMoneyEquals(new java.math.BigDecimal("3000.00"), result.getItems().get(0).getCalculatedAmount());
+            assertMoneyEquals(new java.math.BigDecimal("300.00"), result.getItems().get(0).getCalculatedVatAmount());
+            assertMoneyEquals(new java.math.BigDecimal("4000.00"), result.getSummary().getSumAmount());
+            assertMoneyEquals(new java.math.BigDecimal("400.00"), result.getSummary().getSumVatAmount());
+            assertMoneyEquals(new java.math.BigDecimal("4400.00"), result.getSummary().getTotal());
+        }
     }
 
     @Test

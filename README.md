@@ -38,7 +38,7 @@ The logical columns are:
 | `Thành tiền` | Original amount from the source CSV | Decimal number |
 | `VAT Amt` | Original VAT amount from the source CSV | Decimal number |
 
-The default public API uses a comma (`,`) as the delimiter. Required values must not be blank, and numeric values must be parseable by `BigDecimal`.
+The default public API uses a comma (`,`) as the delimiter. `STT`, `Item`, `Số lượng`, `Đơn giá`, and `% VAT` must not be blank. `Thành tiền` and `VAT Amt` may be blank because they are source columns for values calculated by the library. Other numeric values must be parseable by `BigDecimal`.
 
 ### CSV With Header
 
@@ -129,7 +129,7 @@ Each `InvoiceItem` exposes:
 - `calculatedAmount`
 - `calculatedVatAmount`
 
-The original fields are kept separate from calculated fields so callers can compare source values with derived values.
+The original fields are kept separate from calculated fields so callers can compare source values with derived values. When `Thành tiền` or `VAT Amt` is blank in the input, the corresponding original getter returns `null`.
 
 The returned item list is immutable.
 
@@ -295,7 +295,7 @@ common_csv_1/
 - Header presence must be supplied explicitly by the caller.
 - Header-only input is invalid; blank input is valid and produces an empty result.
 - Multi-line quoted fields are not supported.
-- Required numeric fields must be valid `BigDecimal` values.
+- Required numeric fields must be valid `BigDecimal` values. Blank `Thành tiền` and `VAT Amt` source fields are allowed and produce `null` original values.
 - Negative values are not rejected because no such business rule is defined by this library.
 - No automatic two-decimal currency rounding is performed.
 - The library does not validate whether the source `Thành tiền` or `VAT Amt` values mathematically match the calculated values; it preserves them and calculates separate derived fields.
