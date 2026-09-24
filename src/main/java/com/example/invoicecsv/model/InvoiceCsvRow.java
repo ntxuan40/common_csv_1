@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * Represents a single CSV row before calculation logic is applied.
  *
- * <p>The object stores the original parsed values from the CSV input and intentionally excludes computed totals.</p>
+ * <p>The object stores the parsed input values before calculation logic is applied.</p>
  */
 public final class InvoiceCsvRow {
 
@@ -15,9 +15,6 @@ public final class InvoiceCsvRow {
     private final BigDecimal quantity;
     private final BigDecimal unitPrice;
     private final BigDecimal vatRate;
-    private final BigDecimal originalAmount;
-    private final BigDecimal originalVatAmount;
-
     /**
      * Creates a parsed CSV row.
      *
@@ -26,8 +23,6 @@ public final class InvoiceCsvRow {
      * @param quantity the parsed quantity
      * @param unitPrice the parsed unit price
      * @param vatRate the parsed VAT rate
-    * @param originalAmount the original amount from the CSV row, or {@code null} when blank
-    * @param originalVatAmount the original VAT amount from the CSV row, or {@code null} when blank
      */
     /**
      * Creates a parsed CSV row.
@@ -41,24 +36,18 @@ public final class InvoiceCsvRow {
      * @param quantity the parsed quantity
      * @param unitPrice the parsed unit price
      * @param vatRate the parsed VAT rate
-    * @param originalAmount the original amount from the CSV row, or {@code null} when blank
-    * @param originalVatAmount the original VAT amount from the CSV row, or {@code null} when blank
      */
     public InvoiceCsvRow(
             String stt,
             String item,
             BigDecimal quantity,
             BigDecimal unitPrice,
-            BigDecimal vatRate,
-            BigDecimal originalAmount,
-            BigDecimal originalVatAmount) {
+            BigDecimal vatRate) {
         this.stt = requireNonBlank(stt, "stt");
         this.item = requireNonBlank(item, "item");
         this.quantity = requireNotNull(quantity, "quantity");
         this.unitPrice = requireNotNull(unitPrice, "unitPrice");
         this.vatRate = requireNotNull(vatRate, "vatRate");
-        this.originalAmount = originalAmount;
-        this.originalVatAmount = originalVatAmount;
     }
 
     /**
@@ -106,24 +95,6 @@ public final class InvoiceCsvRow {
         return vatRate;
     }
 
-    /**
-     * Returns the original amount from the CSV row.
-     *
-    * @return original amount, or {@code null} when the source field was blank
-     */
-    public BigDecimal getOriginalAmount() {
-        return originalAmount;
-    }
-
-    /**
-     * Returns the original VAT amount from the CSV row.
-     *
-    * @return original VAT amount, or {@code null} when the source field was blank
-     */
-    public BigDecimal getOriginalVatAmount() {
-        return originalVatAmount;
-    }
-
     private static String requireNonBlank(String value, String fieldName) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(fieldName + " must not be blank");
@@ -147,14 +118,12 @@ public final class InvoiceCsvRow {
                 && Objects.equals(item, other.item)
                 && Objects.equals(quantity, other.quantity)
                 && Objects.equals(unitPrice, other.unitPrice)
-                && Objects.equals(vatRate, other.vatRate)
-                && Objects.equals(originalAmount, other.originalAmount)
-                && Objects.equals(originalVatAmount, other.originalVatAmount);
+                && Objects.equals(vatRate, other.vatRate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stt, item, quantity, unitPrice, vatRate, originalAmount, originalVatAmount);
+        return Objects.hash(stt, item, quantity, unitPrice, vatRate);
     }
 
     @Override
@@ -164,8 +133,6 @@ public final class InvoiceCsvRow {
                 + ", quantity=" + quantity
                 + ", unitPrice=" + unitPrice
                 + ", vatRate=" + vatRate
-                + ", originalAmount=" + originalAmount
-                + ", originalVatAmount=" + originalVatAmount
                 + ']';
     }
 }

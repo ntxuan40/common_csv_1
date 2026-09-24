@@ -35,19 +35,17 @@ The logical columns are:
 | `Số lượng` | Quantity | Decimal number |
 | `Đơn giá` | Unit price | Decimal number |
 | `% VAT` | VAT rate, supplied as a percent or decimal | Decimal number |
-| `Thành tiền` | Original amount from the source CSV | Decimal number |
-| `VAT Amt` | Original VAT amount from the source CSV | Decimal number |
 
-The default public API uses a comma (`,`) as the delimiter. `STT`, `Item`, `Số lượng`, `Đơn giá`, and `% VAT` must not be blank. `Thành tiền` and `VAT Amt` may be blank because they are source columns for values calculated by the library. Other numeric values must be parseable by `BigDecimal`.
+The default public API uses a comma (`,`) as the delimiter. All five fields must not be blank and numeric values must be parseable by `BigDecimal`.
 
 ### CSV With Header
 
 Pass `true` for `hasHeader`:
 
 ```csv
-STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt
-1,Laptop,2,1500,10,3000,300
-2,Mouse,5,200,10,1000,100
+STT,Item,Số lượng,Đơn giá,% VAT
+1,Laptop,2,1500,10
+2,Mouse,5,200,10
 ```
 
 Header names are matched after trimming. A UTF-8 BOM at the beginning of a header is ignored. The required columns may be in a different order, but every data row must have the same number of fields as the header row.
@@ -124,12 +122,10 @@ Each `InvoiceItem` exposes:
 - `quantity`
 - `unitPrice`
 - `vatRate`
-- `originalAmount`
-- `originalVatAmount`
 - `calculatedAmount`
 - `calculatedVatAmount`
 
-The original fields are kept separate from calculated fields so callers can compare source values with derived values. When `Thành tiền` or `VAT Amt` is blank in the input, the corresponding original getter returns `null`.
+The calculated fields contain the values produced by the library.
 
 The returned item list is immutable.
 
@@ -160,9 +156,9 @@ import com.example.invoicecsv.InvoiceCsvLibrary;
 import com.example.invoicecsv.model.InvoiceCsvResult;
 
 String csv = """
-		STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt
-		1,Laptop,2,1500,10,3000,300
-		2,Mouse,5,200,10,1000,100
+		STT,Item,Số lượng,Đơn giá,% VAT
+		1,Laptop,2,1500,10
+		2,Mouse,5,200,10
 		""";
 
 InvoiceCsvResult result = new InvoiceCsvLibrary().process(csv, true);
@@ -295,7 +291,6 @@ common_csv_1/
 - Header presence must be supplied explicitly by the caller.
 - Header-only input is invalid; blank input is valid and produces an empty result.
 - Multi-line quoted fields are not supported.
-- Required numeric fields must be valid `BigDecimal` values. Blank `Thành tiền` and `VAT Amt` source fields are allowed and produce `null` original values.
+- Required numeric fields must be valid `BigDecimal` values.
 - Negative values are not rejected because no such business rule is defined by this library.
 - No automatic two-decimal currency rounding is performed.
-- The library does not validate whether the source `Thành tiền` or `VAT Amt` values mathematically match the calculated values; it preserves them and calculates separate derived fields.

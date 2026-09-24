@@ -21,8 +21,8 @@ class CsvRowParserTest {
     @Test
     void givenHeaderCsv_whenParsed_thenAllFieldsAreMappedExactly() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,Laptop,2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,Laptop,2,1500,10");
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(true, ','));
 
@@ -32,15 +32,13 @@ class CsvRowParserTest {
         assertMoneyEquals("2", rows.get(0).getQuantity());
         assertMoneyEquals("1500", rows.get(0).getUnitPrice());
         assertMoneyEquals("10", rows.get(0).getVatRate());
-        assertMoneyEquals("3000", rows.get(0).getOriginalAmount());
-        assertMoneyEquals("300", rows.get(0).getOriginalVatAmount());
     }
 
     @Test
     void givenCsvWithoutHeader_whenParsed_thenRowsUseFixedColumnOrder() {
         String csv = String.join(System.lineSeparator(),
-                "1,Laptop,2,1500,10,3000,300",
-                "2,Mouse,5,200,10,1000,100");
+                "1,Laptop,2,1500,10",
+                "2,Mouse,5,200,10");
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(false, ','));
 
@@ -52,8 +50,8 @@ class CsvRowParserTest {
     @Test
     void givenReorderedHeader_whenParsed_thenColumnsAreResolvedByName() {
         String csv = String.join(System.lineSeparator(),
-                "Item,STT,% VAT,VAT Amt,Đơn giá,Thành tiền,Số lượng",
-                "Laptop,1,10,300,1500,3000,2");
+                "Item,STT,% VAT,Đơn giá,Số lượng",
+                "Laptop,1,10,1500,2");
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(true, ','));
 
@@ -66,8 +64,8 @@ class CsvRowParserTest {
     @Test
     void givenUtf8BomInHeader_whenParsed_thenRequiredColumnIsRecognized() {
         String csv = String.join(System.lineSeparator(),
-                "\uFEFFSTT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,Laptop,2,1500,10,3000,300");
+                "\uFEFFSTT,Item,Số lượng,Đơn giá,% VAT",
+                "1,Laptop,2,1500,10");
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(true, ','));
 
@@ -77,13 +75,12 @@ class CsvRowParserTest {
 
     @Test
     void givenCustomDelimiter_whenParsed_thenFieldsAreSeparatedUsingConfiguredDelimiter() {
-        String csv = "1;Laptop;2;1500;10;3000;300";
+        String csv = "1;Laptop;2;1500;10";
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(false, ';'));
 
         assertEquals(1, rows.size());
         assertEquals("Laptop", rows.get(0).getItem());
-        assertMoneyEquals("3000", rows.get(0).getOriginalAmount());
     }
 
     @Test
@@ -103,7 +100,7 @@ class CsvRowParserTest {
 
     @Test
     void givenHeaderOnlyCsv_whenParsed_thenValidationExceptionIsThrown() {
-        String csv = "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt";
+        String csv = "STT,Item,Số lượng,Đơn giá,% VAT";
 
         assertThrows(CsvValidationException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
@@ -111,8 +108,8 @@ class CsvRowParserTest {
     @Test
     void givenMissingRequiredHeader_whenParsed_thenMissingColumnExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,Thành tiền",
-                "1,Laptop,2,1500,3000");
+                "STT,Item,Số lượng,Đơn giá",
+                "1,Laptop,2,1500");
 
         assertThrows(MissingColumnException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
@@ -120,8 +117,8 @@ class CsvRowParserTest {
     @Test
     void givenIncorrectColumnCount_whenParsed_thenFormatExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,Laptop,2,1500,10,3000");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,Laptop,2,1500");
 
         assertThrows(CsvFormatException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
@@ -129,8 +126,8 @@ class CsvRowParserTest {
     @Test
     void givenInvalidNumericValue_whenParsed_thenValidationExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,Laptop,abc,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,Laptop,abc,1500,10");
 
         assertThrows(CsvValidationException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
@@ -138,8 +135,8 @@ class CsvRowParserTest {
     @Test
     void givenQuotedValue_whenParsed_thenQuotesAreRemovedAndValueIsPreserved() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,\"Laptop Pro 15\",2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,\"Laptop Pro 15\",2,1500,10");
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(true, ','));
 
@@ -149,8 +146,8 @@ class CsvRowParserTest {
     @Test
     void givenEscapedQuote_whenParsed_thenLiteralQuoteIsPreserved() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,\"Laptop \"\"Pro\"\"\",2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,\"Laptop \"\"Pro\"\"\",2,1500,10");
 
         List<InvoiceCsvRow> rows = parser.parse(csv, new CsvParseOptions(true, ','));
 
@@ -160,8 +157,8 @@ class CsvRowParserTest {
     @Test
     void givenQuoteInsideUnquotedValue_whenParsed_thenFormatExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,Lap\"top,2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,Lap\"top,2,1500,10");
 
         assertThrows(CsvFormatException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
@@ -169,15 +166,15 @@ class CsvRowParserTest {
     @Test
     void givenCharacterAfterClosingQuote_whenParsed_thenFormatExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,\"Laptop\"Pro,2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,\"Laptop\"Pro,2,1500,10");
 
         assertThrows(CsvFormatException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
 
     @Test
     void givenReader_whenParsed_thenCallerOwnedReaderRemainsOpen() {
-        TrackingReader reader = new TrackingReader("1,Laptop,2,1500,10,3000,300");
+        TrackingReader reader = new TrackingReader("1,Laptop,2,1500,10");
 
         parser.parse(reader, new CsvParseOptions(false, ','));
 
@@ -187,8 +184,8 @@ class CsvRowParserTest {
     @Test
     void givenMissingRequiredValue_whenParsed_thenValidationExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,,2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,,2,1500,10");
 
         assertThrows(CsvValidationException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }
@@ -196,8 +193,8 @@ class CsvRowParserTest {
     @Test
     void givenMalformedCsv_whenParsed_thenFormatExceptionIsThrown() {
         String csv = String.join(System.lineSeparator(),
-                "STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt",
-                "1,\"Laptop,2,1500,10,3000,300");
+                "STT,Item,Số lượng,Đơn giá,% VAT",
+                "1,\"Laptop,2,1500,10");
 
         assertThrows(CsvFormatException.class, () -> parser.parse(csv, new CsvParseOptions(true, ',')));
     }

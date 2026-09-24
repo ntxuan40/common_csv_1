@@ -71,8 +71,6 @@ public class InvoiceCalculationService {
                 quantity,
                 unitPrice,
                 row.getVatRate(),
-                row.getOriginalAmount(),
-                row.getOriginalVatAmount(),
                 calculatedAmount,
                 calculatedVatAmount);
     }

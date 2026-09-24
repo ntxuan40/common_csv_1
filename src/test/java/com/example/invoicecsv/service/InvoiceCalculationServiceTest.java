@@ -21,15 +21,11 @@ class InvoiceCalculationServiceTest {
                 "Laptop",
                 new BigDecimal("2"),
                 new BigDecimal("1500.00"),
-                new BigDecimal("0.10"),
-                new BigDecimal("3000.00"),
-                new BigDecimal("300.00"))
+                new BigDecimal("0.10"))
         );
 
         assertMoneyEquals(new BigDecimal("3000.00"), item.getCalculatedAmount());
         assertMoneyEquals(new BigDecimal("300.00"), item.getCalculatedVatAmount());
-        assertMoneyEquals(new BigDecimal("3000.00"), item.getOriginalAmount());
-        assertMoneyEquals(new BigDecimal("300.00"), item.getOriginalVatAmount());
     }
 
     @Test
@@ -39,9 +35,7 @@ class InvoiceCalculationServiceTest {
                 "Mouse",
                 BigDecimal.ZERO,
                 new BigDecimal("25.00"),
-                new BigDecimal("0.10"),
-                BigDecimal.ZERO,
-                BigDecimal.ZERO)
+                new BigDecimal("0.10"))
         );
 
         assertMoneyEquals(BigDecimal.ZERO, item.getCalculatedAmount());
@@ -55,9 +49,7 @@ class InvoiceCalculationServiceTest {
                 "Cable",
                 new BigDecimal("3"),
                 BigDecimal.ZERO,
-                new BigDecimal("0.10"),
-                BigDecimal.ZERO,
-                BigDecimal.ZERO)
+                new BigDecimal("0.10"))
         );
 
         assertMoneyEquals(BigDecimal.ZERO, item.getCalculatedAmount());
@@ -71,8 +63,6 @@ class InvoiceCalculationServiceTest {
                 "Headphones",
                 new BigDecimal("4"),
                 new BigDecimal("100.00"),
-                BigDecimal.ZERO,
-                new BigDecimal("400.00"),
                 BigDecimal.ZERO)
         );
 
@@ -87,9 +77,7 @@ class InvoiceCalculationServiceTest {
                 "Monitor",
                 new BigDecimal("1"),
                 new BigDecimal("500.00"),
-                new BigDecimal("0.08"),
-                new BigDecimal("500.00"),
-                new BigDecimal("40.00"))
+                new BigDecimal("0.08"))
         );
 
         assertMoneyEquals(new BigDecimal("500.00"), item.getCalculatedAmount());
@@ -103,9 +91,7 @@ class InvoiceCalculationServiceTest {
                 "Pen",
                 new BigDecimal("3"),
                 new BigDecimal("12.50"),
-                new BigDecimal("0.10"),
-                new BigDecimal("37.50"),
-                new BigDecimal("3.75"))
+                new BigDecimal("0.10"))
         );
 
         assertMoneyEquals(new BigDecimal("37.50"), item.getCalculatedAmount());
@@ -119,9 +105,7 @@ class InvoiceCalculationServiceTest {
                 "Server",
                 new BigDecimal("25"),
                 new BigDecimal("1234567.89"),
-                new BigDecimal("0.20"),
-                new BigDecimal("30864197.25"),
-                new BigDecimal("6172839.45"))
+                new BigDecimal("0.20"))
         );
 
         assertMoneyEquals(new BigDecimal("30864197.25"), item.getCalculatedAmount());
@@ -137,13 +121,11 @@ class InvoiceCalculationServiceTest {
                 "Widget",
                 new BigDecimal("1.23456"),
                 new BigDecimal("7.89123"),
-                new BigDecimal("0.10"),
-                new BigDecimal("9.7426881888"),
-                new BigDecimal("0.97426881888"))
+                new BigDecimal("0.10"))
         );
 
-            assertMoneyEquals(new BigDecimal("9.7422"), item.getCalculatedAmount());
-            assertMoneyEquals(new BigDecimal("0.97422"), item.getCalculatedVatAmount());
+        assertMoneyEquals(new BigDecimal("9.7422"), item.getCalculatedAmount());
+        assertMoneyEquals(new BigDecimal("0.97422"), item.getCalculatedVatAmount());
     }
 
     private void assertMoneyEquals(BigDecimal expected, BigDecimal actual) {

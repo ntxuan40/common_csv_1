@@ -4,10 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * Represents one processed CSV row with the original source values and the calculated values kept separate.
- *
- * <p>The original CSV values are preserved exactly as provided by the caller, while the calculated values
- * are stored in dedicated fields so they can be inspected independently when needed.</p>
+ * Represents one processed CSV row with its calculated values.
  */
 public final class InvoiceItem {
 
@@ -16,8 +13,6 @@ public final class InvoiceItem {
     private final BigDecimal quantity;
     private final BigDecimal unitPrice;
     private final BigDecimal vatRate;
-    private final BigDecimal originalAmount;
-    private final BigDecimal originalVatAmount;
     private final BigDecimal calculatedAmount;
     private final BigDecimal calculatedVatAmount;
 
@@ -29,8 +24,6 @@ public final class InvoiceItem {
      * @param quantity the quantity value from the CSV row
      * @param unitPrice the unit price from the CSV row
      * @param vatRate the VAT rate from the CSV row
-    * @param originalAmount the original amount value from the CSV row, or {@code null} when blank
-    * @param originalVatAmount the original VAT amount value from the CSV row, or {@code null} when blank
      * @param calculatedAmount the calculated amount for this row
      * @param calculatedVatAmount the calculated VAT amount for this row
      */
@@ -46,8 +39,6 @@ public final class InvoiceItem {
      * @param quantity the quantity value from the CSV row
      * @param unitPrice the unit price from the CSV row
      * @param vatRate the VAT rate from the CSV row
-    * @param originalAmount the original amount value from the CSV row, or {@code null} when blank
-    * @param originalVatAmount the original VAT amount value from the CSV row, or {@code null} when blank
      * @param calculatedAmount the calculated amount for this row
      * @param calculatedVatAmount the calculated VAT amount for this row
      */
@@ -57,8 +48,6 @@ public final class InvoiceItem {
             BigDecimal quantity,
             BigDecimal unitPrice,
             BigDecimal vatRate,
-            BigDecimal originalAmount,
-            BigDecimal originalVatAmount,
             BigDecimal calculatedAmount,
             BigDecimal calculatedVatAmount) {
         this.stt = Objects.requireNonNull(stt, "stt must not be null");
@@ -66,8 +55,6 @@ public final class InvoiceItem {
         this.quantity = requireNotNull(quantity, "quantity");
         this.unitPrice = requireNotNull(unitPrice, "unitPrice");
         this.vatRate = requireNotNull(vatRate, "vatRate");
-        this.originalAmount = originalAmount;
-        this.originalVatAmount = originalVatAmount;
         this.calculatedAmount = requireNotNull(calculatedAmount, "calculatedAmount");
         this.calculatedVatAmount = requireNotNull(calculatedVatAmount, "calculatedVatAmount");
     }
@@ -118,24 +105,6 @@ public final class InvoiceItem {
     }
 
     /**
-     * Returns the original amount value from the CSV row.
-     *
-    * @return the original amount, or {@code null} when the source field was blank
-     */
-    public BigDecimal getOriginalAmount() {
-        return originalAmount;
-    }
-
-    /**
-     * Returns the original VAT amount value from the CSV row.
-     *
-    * @return the original VAT amount, or {@code null} when the source field was blank
-     */
-    public BigDecimal getOriginalVatAmount() {
-        return originalVatAmount;
-    }
-
-    /**
      * Returns the calculated amount for this row.
      *
      * @return the calculated amount
@@ -167,8 +136,6 @@ public final class InvoiceItem {
                 quantity,
                 unitPrice,
                 vatRate,
-                originalAmount,
-                originalVatAmount,
                 calculatedAmount,
                 calculatedVatAmount);
     }
@@ -190,16 +157,13 @@ public final class InvoiceItem {
                 && Objects.equals(quantity, other.quantity)
                 && Objects.equals(unitPrice, other.unitPrice)
                 && Objects.equals(vatRate, other.vatRate)
-                && Objects.equals(originalAmount, other.originalAmount)
-                && Objects.equals(originalVatAmount, other.originalVatAmount)
                 && Objects.equals(calculatedAmount, other.calculatedAmount)
                 && Objects.equals(calculatedVatAmount, other.calculatedVatAmount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(stt, item, quantity, unitPrice, vatRate,
-                originalAmount, originalVatAmount, calculatedAmount, calculatedVatAmount);
+        return Objects.hash(stt, item, quantity, unitPrice, vatRate, calculatedAmount, calculatedVatAmount);
     }
 
     @Override
@@ -210,8 +174,6 @@ public final class InvoiceItem {
                 + ", quantity=" + quantity
                 + ", unitPrice=" + unitPrice
                 + ", vatRate=" + vatRate
-                + ", originalAmount=" + originalAmount
-                + ", originalVatAmount=" + originalVatAmount
                 + ", calculatedAmount=" + calculatedAmount
                 + ", calculatedVatAmount=" + calculatedVatAmount
                 + ']';

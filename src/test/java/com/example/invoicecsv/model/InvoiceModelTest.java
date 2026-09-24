@@ -20,15 +20,11 @@ class InvoiceModelTest {
                 new BigDecimal("1500.00"),
                 new BigDecimal("0.10"),
                 new BigDecimal("3000.00"),
-                new BigDecimal("300.00"),
-                new BigDecimal("3000.00"),
                 new BigDecimal("300.00")
         );
 
         assertEquals("1", item.getStt());
         assertEquals("Laptop", item.getItem());
-        assertEquals(new BigDecimal("3000.00"), item.getOriginalAmount());
-        assertEquals(new BigDecimal("300.00"), item.getOriginalVatAmount());
         assertEquals(new BigDecimal("3000.00"), item.getCalculatedAmount());
         assertEquals(new BigDecimal("300.00"), item.getCalculatedVatAmount());
     }
@@ -47,8 +43,6 @@ class InvoiceModelTest {
                 new BigDecimal("2"),
                 new BigDecimal("1500.00"),
                 new BigDecimal("0.10"),
-                new BigDecimal("3000.00"),
-                new BigDecimal("300.00"),
                 new BigDecimal("3000.00"),
                 new BigDecimal("300.00")
         );

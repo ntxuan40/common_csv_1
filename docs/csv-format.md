@@ -11,8 +11,6 @@ The logical columns are:
 | `Số lượng` | `BigDecimal` | Quantity |
 | `Đơn giá` | `BigDecimal` | Unit price |
 | `% VAT` | `BigDecimal` | VAT as percent or decimal rate |
-| `Thành tiền` | `BigDecimal` or blank | Original amount supplied by the source; blank when not supplied |
-| `VAT Amt` | `BigDecimal` or blank | Original VAT amount supplied by the source; blank when not supplied |
 
 The default delimiter is comma (`,`). A custom delimiter can be supplied through `CsvParseOptions`.
 
@@ -21,7 +19,7 @@ The default delimiter is comma (`,`). A custom delimiter can be supplied through
 The caller must pass `hasHeader = true` when the first row contains column names:
 
 ```csv
-STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt
+STT,Item,Số lượng,Đơn giá,% VAT
 1,Laptop,2,1500,10,3000,300
 ```
 
@@ -34,7 +32,7 @@ A header-only input is invalid because there is no data row to process.
 The caller must pass `hasHeader = false` when rows are positional. The fixed order is:
 
 ```csv
-STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt
+STT,Item,Số lượng,Đơn giá,% VAT
 ```
 
 The header text above is descriptive only; it must not be included in the actual no-header input:
@@ -50,7 +48,6 @@ Each row must contain exactly seven fields.
 
 - `STT`, `Item`, `Số lượng`, `Đơn giá`, and `% VAT` must not be blank.
 - Numeric values are parsed with `new BigDecimal(...)`.
-- `Thành tiền` and `VAT Amt` may be blank because they are calculated output columns. Their original model values are then `null`.
 - Negative numeric values are accepted; the library does not impose a negative-value business rule.
 - Quoted values are supported.
 - A comma inside a quoted value is treated as part of that value.
@@ -67,7 +64,7 @@ Example quoted value:
 ## Invalid input behavior
 
 - Missing required header: `MissingColumnException`
-- Blank required value other than `Thành tiền` and `VAT Amt`: `CsvValidationException`
+- Blank required value: `CsvValidationException`
 - Invalid numeric value: `CsvValidationException`
 - Header-only input: `CsvValidationException`
 - Unterminated quoted field: `CsvFormatException`

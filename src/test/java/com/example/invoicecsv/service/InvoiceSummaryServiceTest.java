@@ -24,8 +24,6 @@ class InvoiceSummaryServiceTest {
                 new BigDecimal("1500.00"),
                 new BigDecimal("0.10"),
                 new BigDecimal("3000.00"),
-                new BigDecimal("300.00"),
-                new BigDecimal("3000.00"),
                 new BigDecimal("300.00"));
 
         InvoiceCsvResult result = service.summarize(List.of(item));
@@ -39,9 +37,9 @@ class InvoiceSummaryServiceTest {
         void givenMultipleItems_whenSummarized_thenAmountsAndVatAreAggregated() {
         List<InvoiceItem> items = List.of(
                 new InvoiceItem("1", "A", new BigDecimal("1"), new BigDecimal("100.00"), new BigDecimal("0.10"),
-                        new BigDecimal("100.00"), new BigDecimal("10.00"), new BigDecimal("100.00"), new BigDecimal("10.00")),
+                        new BigDecimal("100.00"), new BigDecimal("10.00")),
                 new InvoiceItem("2", "B", new BigDecimal("2"), new BigDecimal("50.00"), new BigDecimal("0.20"),
-                        new BigDecimal("100.00"), new BigDecimal("20.00"), new BigDecimal("100.00"), new BigDecimal("20.00"))
+                        new BigDecimal("100.00"), new BigDecimal("20.00"))
         );
 
         InvoiceCsvResult result = service.summarize(items);
@@ -54,9 +52,9 @@ class InvoiceSummaryServiceTest {
     @Test
         void givenZeroValueItems_whenSummarized_thenAllTotalsAreZero() {
         List<InvoiceItem> items = List.of(
-                new InvoiceItem("1", "Zero", BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                new InvoiceItem("1", "Zero", BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
                         BigDecimal.ZERO, BigDecimal.ZERO),
-                new InvoiceItem("2", "Zero2", BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                new InvoiceItem("2", "Zero2", BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
                         BigDecimal.ZERO, BigDecimal.ZERO)
         );
 
@@ -81,10 +79,10 @@ class InvoiceSummaryServiceTest {
         void givenLargeTotals_whenSummarized_thenTotalsRemainExact() {
         List<InvoiceItem> items = List.of(
                 new InvoiceItem("1", "Big1", new BigDecimal("100"), new BigDecimal("1234567.89"), new BigDecimal("0.10"),
-                        new BigDecimal("123456789.00"), new BigDecimal("12345678.90"), new BigDecimal("123456789.00"),
+                        new BigDecimal("123456789.00"),
                         new BigDecimal("12345678.90")),
                 new InvoiceItem("2", "Big2", new BigDecimal("25"), new BigDecimal("1000000.00"), new BigDecimal("0.20"),
-                        new BigDecimal("25000000.00"), new BigDecimal("5000000.00"), new BigDecimal("25000000.00"),
+                        new BigDecimal("25000000.00"),
                         new BigDecimal("5000000.00"))
         );
 
@@ -99,9 +97,9 @@ class InvoiceSummaryServiceTest {
         void givenDifferentVatRates_whenSummarized_thenEachItemVatIsIncludedExactly() {
         List<InvoiceItem> items = List.of(
                 new InvoiceItem("1", "A", new BigDecimal("1"), new BigDecimal("100.00"), new BigDecimal("0.10"),
-                        new BigDecimal("100.00"), new BigDecimal("10.00"), new BigDecimal("100.00"), new BigDecimal("10.00")),
+                        new BigDecimal("100.00"), new BigDecimal("10.00")),
                 new InvoiceItem("2", "B", new BigDecimal("1"), new BigDecimal("200.00"), new BigDecimal("0.15"),
-                        new BigDecimal("200.00"), new BigDecimal("30.00"), new BigDecimal("200.00"), new BigDecimal("30.00"))
+                        new BigDecimal("200.00"), new BigDecimal("30.00"))
         );
 
         InvoiceCsvResult result = service.summarize(items);

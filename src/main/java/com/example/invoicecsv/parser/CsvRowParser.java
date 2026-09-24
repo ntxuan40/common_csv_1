@@ -24,9 +24,7 @@ public class CsvRowParser {
             "Item",
             "Số lượng",
             "Đơn giá",
-            "% VAT",
-            "Thành tiền",
-            "VAT Amt"
+            "% VAT"
     };
 
         /**
@@ -216,17 +214,12 @@ public class CsvRowParser {
         String quantityText = getValue(row, indexes.get(2), lineNumber, "Số lượng");
         String unitPriceText = getValue(row, indexes.get(3), lineNumber, "Đơn giá");
         String vatRateText = getValue(row, indexes.get(4), lineNumber, "% VAT");
-        String originalAmountText = getOptionalValue(row, indexes.get(5), lineNumber, "Thành tiền");
-        String originalVatAmountText = getOptionalValue(row, indexes.get(6), lineNumber, "VAT Amt");
-
         return new InvoiceCsvRow(
                 stt,
                 item,
                 parseBigDecimal(quantityText, "Số lượng", lineNumber),
                 parseBigDecimal(unitPriceText, "Đơn giá", lineNumber),
-                parseBigDecimal(vatRateText, "% VAT", lineNumber),
-                parseOptionalBigDecimal(originalAmountText, "Thành tiền", lineNumber),
-                parseOptionalBigDecimal(originalVatAmountText, "VAT Amt", lineNumber));
+                parseBigDecimal(vatRateText, "% VAT", lineNumber));
     }
 
     private String getValue(String[] row, int index, int lineNumber, String fieldName) {
@@ -240,14 +233,6 @@ public class CsvRowParser {
         return value;
     }
 
-    private String getOptionalValue(String[] row, int index, int lineNumber, String fieldName) {
-        if (index >= row.length) {
-            throw new CsvValidationException("Missing value for column '" + fieldName + "' at line " + lineNumber);
-        }
-        String value = row[index].trim();
-        return value.isEmpty() ? null : value;
-    }
-
     private BigDecimal parseBigDecimal(String text, String fieldName, int lineNumber) {
         try {
             return new BigDecimal(text.trim());
@@ -255,10 +240,6 @@ public class CsvRowParser {
             throw new CsvValidationException(
                     "Invalid numeric value for column '" + fieldName + "' at line " + lineNumber + ": '" + text + "'");
         }
-    }
-
-    private BigDecimal parseOptionalBigDecimal(String text, String fieldName, int lineNumber) {
-        return text == null ? null : parseBigDecimal(text, fieldName, lineNumber);
     }
 
     private void validateRowLength(String[] row, int expectedLength, int lineNumber) {

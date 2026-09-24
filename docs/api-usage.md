@@ -30,9 +30,9 @@ public final class InvoiceExample {
 
     public static void main(String[] args) {
         String csv = """
-                STT,Item,Số lượng,Đơn giá,% VAT,Thành tiền,VAT Amt
-                1,Laptop,2,1500,10,3000,300
-                2,Mouse,5,200,10,1000,100
+                STT,Item,Số lượng,Đơn giá,% VAT
+                1,Laptop,2,1500,10
+                2,Mouse,5,200,10
                 """;
 
         InvoiceCsvResult result = new InvoiceCsvLibrary().process(csv, true);

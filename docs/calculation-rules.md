@@ -9,7 +9,7 @@ calculatedAmount = quantity * unitPrice
 calculatedVatAmount = calculatedAmount * normalizedVatRate
 ```
 
-The original `Thành tiền` and `VAT Amt` values are retained separately. Either source field may be blank; in that case the corresponding original model value is `null`. The library does not compare source values with calculated values or overwrite them.
+The library calculates amount and VAT from the parsed quantity, unit price, and VAT rate. The calculated values are stored in `InvoiceItem`.
 
 ## VAT normalization
 
